@@ -32,31 +32,28 @@ document.getElementById("tarotForm").addEventListener("submit", async (e) => {
         .filter(Boolean)
         .map((text, i) => {
           const label = ["Card 1", "Card 2", "Card 3"][i] || "Summary";
-    
-          const match = text.trim().match(/^([\w\s:,'-]+?)\.\s+(.*)/s);
-    
+
+          const match = text.trim().match(/^([\w\s:'"-]+?)\.\s+(.*)/s);
+
           if (match) {
             const [_, cardName, meaning] = match;
-        
-            const imageUrl = tarotImages[cardName.trim()] || null;
-        
+            const imageUrl = tarotImages[cardName.trim()] || "";
+
             return `
-              <p>
+              <div class="card-block">
                 <strong>${label}: ${cardName}</strong><br><br>
-                ${imageUrl ? `<img src="${imageUrl}" alt="${cardName}" style="max-width:100%; margin: 12px 0; border-radius: 10px;">` : ""}
-                ${meaning.trim()}
-              </p>
+                ${imageUrl ? `<img src="${imageUrl}" alt="${cardName}" class="tarot-img">` : ""}
+                <p>${meaning.trim()}</p>
+              </div>
             `;
           }
-    
+
           return `<p><strong>${label}:</strong><br><br>${text.trim()}</p>`;
         })
         .join('');
-    
-      resultEl.innerHTML = formatted;
-    }
 
-    else {
+      resultEl.innerHTML = formatted;
+    } else {
       resultEl.innerHTML = "<em>No reading returned. Please try again.</em>";
     }
 
