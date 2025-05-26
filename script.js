@@ -12,7 +12,7 @@ document.getElementById("tarotForm").addEventListener("submit", async (e) => {
   resultEl.textContent = "Shuffling the cards... 🔮";
 
   try {
-    const response = await fetch("https://efb9f1b2-twilight-cloud-e10e.0023mansi.workers.dev/", {
+    const response = await fetch("https://twilight-cloud-e10e.0023mansi.workers.dev/", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
