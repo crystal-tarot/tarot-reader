@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tarot Reading</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>🔮 Ask the Tarot</h1>
+    <form id="tarotForm">
+      <label for="userQuestion">What would you like to ask?</label>
+      <textarea id="userQuestion" rows="4" required></textarea>
+      <button type="submit">Reveal My Reading</button>
+    </form>
+    <div id="resultContainer">
+      <h2>Your Reading:</h2>
+      <p id="result">...</p>
+    </div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
