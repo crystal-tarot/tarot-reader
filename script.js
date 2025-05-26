@@ -28,24 +28,24 @@ document.getElementById("tarotForm").addEventListener("submit", async (e) => {
 
     if (data.reading) {
       const formatted = data.reading
-        .split(/(?:The|the) (first|second|third) card drawn is/i)
-        .filter(Boolean)
-        .map((text, i) => {
-          const label = ["Card 1", "Card 2", "Card 3"][i] || "Summary";
-
-          const match = text.trim().match(/^([\w\s:'"-]+?)\.\s+(.*)/s);
-
-          if (match) {
-            const [_, cardName, meaning] = match;
-            const imageUrl = tarotImages[cardName.trim()] || "";
-
-            return `
-              <div class="card-block">
-                <strong>${label}: ${cardName}</strong><br><br>
-                ${imageUrl ? `<img src="${imageUrl}" alt="${cardName}" class="tarot-img">` : ""}
-                <p>${meaning.trim()}</p>
-              </div>
-            `;
+        .match(/Card \d:.*?(?=Card \d:|$)/gs)
+        ?.map((block, i) => {
+          const label = `Card ${i + 1}`;
+    
+          const match = block.match(/^Card \d:\s*([\w\s]+?)(?=\s|$)/);
+          const cardName = match?.[1]?.trim() || label;
+    
+          const imageUrl = tarotImages[cardName] || "";
+    
+          const bodyText = block.replace(/^Card \d:\s*[\w\s]+/, "").trim();
+    
+          return `
+            <div class="card-block">
+              <strong>${label}: ${cardName}</strong><br><br>
+              ${imageUrl ? `<img src="${imageUrl}" alt="${cardName}" class="tarot-img">` : ""}
+              <p>${bodyText}</p>
+            </div>
+          `;
           }
 
           return `<p><strong>${label}:</strong><br><br>${text.trim()}</p>`;
