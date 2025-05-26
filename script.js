@@ -52,8 +52,10 @@ document.getElementById("tarotForm").addEventListener("submit", async (e) => {
         })
         .join('');
 
-      resultEl.innerHTML = formatted;
-    } else {
+      resultEl.innerHTML = formatted || "<em>Could not format the reading.</em>";
+    } 
+
+    else {
       resultEl.innerHTML = "<em>No reading returned. Please try again.</em>";
     }
 
