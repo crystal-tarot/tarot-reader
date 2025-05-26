@@ -7,7 +7,7 @@ document.getElementById("tarotForm").addEventListener("submit", async (e) => {
     resultEl.textContent = "Shuffling the cards... 🔄";
   
     try {
-      const response = await fetch("https://your-backend-url.com", {
+      const response = await fetch("https://twilight-cloud-e10e.0023mansi.workers.dev/", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ prompt: question })
