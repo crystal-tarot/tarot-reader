@@ -28,13 +28,29 @@ document.getElementById("tarotForm").addEventListener("submit", async (e) => {
 
     if (data.reading) {
       const formatted = data.reading
-        .split(/Card \d:/)
+        .split(/(?:The|the) (first|second|third) card drawn is/i)
         .filter(Boolean)
-        .map((card, index) => `<p><strong>Card ${index + 1}:</strong> ${card.trim()}</p>`)
+        .map((text, i) => {
+          const label = ["Card 1", "Card 2", "Card 3"][i] || "Summary";
+    
+          const match = text.trim().match(/^([\w\s:,'-]+?)\.\s+(.*)/s);
+    
+          if (match) {
+            const [_, cardName, meaning] = match;
+            return `
+              <p>
+                <strong>${label}: ${cardName}</strong><br><br>
+                ${meaning.trim()}
+              </p>
+            `;
+          }
+    
+          return `<p><strong>${label}:</strong><br><br>${text.trim()}</p>`;
+        })
         .join('');
-
+    
       resultEl.innerHTML = formatted;
-}
+    }
 
     else {
       resultEl.innerHTML = "<em>No reading returned. Please try again.</em>";
