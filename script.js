@@ -27,33 +27,30 @@ document.getElementById("tarotForm").addEventListener("submit", async (e) => {
     const data = await response.json();
 
     if (data.reading) {
-      const formatted = data.reading
-        .match(/Card \d:.*?(?=Card \d:|$)/gs)
-        ?.map((block, i) => {
-          const label = `Card ${i + 1}`;
-    
-          const match = block.match(/^Card \d:\s*([\w\s]+?)(?=\s|$)/);
-          const cardName = match?.[1]?.trim() || label;
-    
-          const imageUrl = tarotImages[cardName] || "";
-    
-          const bodyText = block.replace(/^Card \d:\s*[\w\s]+/, "").trim();
-    
-          return `
-            <div class="card-block">
-              <strong>${label}: ${cardName}</strong><br><br>
-              ${imageUrl ? `<img src="${imageUrl}" alt="${cardName}" class="tarot-img">` : ""}
-              <p>${bodyText}</p>
-            </div>
-          `;
-          }
+    const cardBlocks = data.reading.match(/Card \d:.*?(?=(?:Card \d:|$))/gs);
+  
+    const formatted = cardBlocks?.map((block, i) => {
+      const label = `Card ${i + 1}`;
+  
+      const match = block.match(/^Card \d:\s*([\w\s]+?)(?=\s|$)/);
+      const cardName = match?.[1]?.trim() || label;
+  
+      const imageUrl = tarotImages[cardName] || "";
+  
+      const body = block.replace(/^Card \d:\s*[\w\s]+/, "").trim();
+  
+      return `
+        <div class="card-block">
+          <strong>${label}: ${cardName}</strong><br><br>
+          ${imageUrl ? `<img src="${imageUrl}" alt="${cardName}" class="tarot-img">` : ""}
+          <p>${body}</p>
+        </div>
+      `;
+    }).join('');
+  
+    resultEl.innerHTML = formatted || "<em>Could not format the reading.</em>";
+  }
 
-          return `<p><strong>${label}:</strong><br><br>${text.trim()}</p>`;
-        })
-        .join('');
-
-      resultEl.innerHTML = formatted || "<em>Could not format the reading.</em>";
-    } 
 
     else {
       resultEl.innerHTML = "<em>No reading returned. Please try again.</em>";
