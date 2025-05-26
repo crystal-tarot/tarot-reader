@@ -27,30 +27,30 @@ document.getElementById("tarotForm").addEventListener("submit", async (e) => {
     const data = await response.json();
 
     if (data.reading) {
-    const cardBlocks = data.reading.match(/Card \d:.*?(?=(?:Card \d:|$))/gs);
-  
-    const formatted = cardBlocks?.map((block, i) => {
-      const label = `Card ${i + 1}`;
-  
-      const match = block.match(/^Card \d:\s*([\w\s]+?)(?=\s|$)/);
-      const cardName = match?.[1]?.trim() || label;
-  
-      const imageUrl = tarotImages[cardName] || "";
-  
-      const body = block.replace(/^Card \d:\s*[\w\s]+/, "").trim();
-  
-      return `
-        <div class="card-block">
-          <strong>${label}: ${cardName}</strong><br><br>
-          ${imageUrl ? `<img src="${imageUrl}" alt="${cardName}" class="tarot-img">` : ""}
-          <p>${body}</p>
-        </div>
-      `;
-    }).join('');
-  
-    resultEl.innerHTML = formatted || "<em>Could not format the reading.</em>";
-  }
-
+      const cardBlocks = data.reading.split(/(?=Card \d:)/g); // hard split at each "Card X:"
+    
+      const formatted = cardBlocks.map((block, i) => {
+        const label = `Card ${i + 1}`;
+    
+        // Extract the card name (first 1-5 words after "Card X:")
+        const nameMatch = block.match(/^Card \d:\s*([\w\s]{2,40}?)(?=\s[A-Z])/);
+        const cardName = nameMatch?.[1]?.trim() || label;
+    
+        const imageUrl = tarotImages[cardName] || "";
+    
+        const description = block.replace(/^Card \d:\s*[\w\s]+/, "").trim();
+    
+        return `
+          <div class="card-block">
+            <strong>${label}: ${cardName}</strong><br><br>
+            ${imageUrl ? `<img src="${imageUrl}" alt="${cardName}" class="tarot-img">` : ""}
+            <p>${description}</p>
+          </div>
+        `;
+      }).join('');
+    
+      resultEl.innerHTML = formatted;
+    }
 
     else {
       resultEl.innerHTML = "<em>No reading returned. Please try again.</em>";
