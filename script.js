@@ -5,14 +5,14 @@ document.getElementById("tarotForm").addEventListener("submit", async (e) => {
   const resultEl = document.getElementById("result");
 
   if (!question) {
-    resultEl.textContent = "Please enter a question.";
+    resultEl.innerHTML = "<em>Please enter a question.</em>";
     return;
   }
 
-  resultEl.textContent = "Shuffling the cards... 🔮";
+  resultEl.innerHTML = "Shuffling the cards... 🔮";
 
   try {
-    const response = await fetch("https://twilight-cloud-e10e.0023mansi.workers.dev/", {
+    const response = await fetch("https://twilight-cloud-e10e.0023mansi.workers.dev", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -27,13 +27,17 @@ document.getElementById("tarotForm").addEventListener("submit", async (e) => {
     const data = await response.json();
 
     if (data.reading) {
-      resultEl.textContent = data.reading;
+      const formatted = data.reading
+        .replace(/Card (\d+):/g, '<strong>Card $1:</strong>')
+        .replace(/\n/g, '<br><br>');
+
+      resultEl.innerHTML = formatted;
     } else {
-      resultEl.textContent = "No reading returned. Please try again.";
+      resultEl.innerHTML = "<em>No reading returned. Please try again.</em>";
     }
 
   } catch (err) {
     console.error("Fetch error:", err);
-    resultEl.textContent = "Sorry, something went wrong. Try again later.";
+    resultEl.innerHTML = "<em>Sorry, something went wrong. Try again later.</em>";
   }
 });
