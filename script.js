@@ -28,11 +28,15 @@ document.getElementById("tarotForm").addEventListener("submit", async (e) => {
 
     if (data.reading) {
       const formatted = data.reading
-        .replace(/Card (\d+):/g, '<strong>Card $1:</strong>')
-        .replace(/\n/g, '<br><br>');
+        .split(/Card \d:/)
+        .filter(Boolean)
+        .map((card, index) => `<p><strong>Card ${index + 1}:</strong> ${card.trim()}</p>`)
+        .join('');
 
       resultEl.innerHTML = formatted;
-    } else {
+}
+
+    else {
       resultEl.innerHTML = "<em>No reading returned. Please try again.</em>";
     }
 
